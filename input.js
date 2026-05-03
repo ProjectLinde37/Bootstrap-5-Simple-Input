@@ -4,6 +4,9 @@
    - Bootstrap 5 native
    - On-demand DOM injectie
    - Zelfopruimend
+   
+   Depends on Bootstrap 5 (bootstrap.bundle.js via CDN)
+   Uses: bootstrap.Modal
    ========================================================================== */
 
 (function (window)
