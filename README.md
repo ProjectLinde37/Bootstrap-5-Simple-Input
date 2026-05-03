@@ -437,3 +437,9 @@ The **Goosse Input Component** is:
 *   perfectly suited for MVC applications
 
 Use `onSubmit(FormData)` as the **single source of truth** for input values.
+
+
+## Demo
+
+Live demo:
+https://<username>.github.io/Bootstrap-5-Simple-Input/
