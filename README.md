@@ -17,7 +17,18 @@ Built on top of **Bootstrap 5** (JS + CSS).
 - ✅ Production‑first
 
 ---
+## Demo
 
+Live demo of the Goosse Dialog component:
+
+👉 https://projectlinde37.github.io/Bootstrap-5-Simple-Dialog/
+
+The demo showcases:
+- All dialog types (`info`, `warning`, `danger`, `success`)
+- Confirm and cancel behaviour
+- Singleton guard (only one dialog at a time)
+- Bootstrap‑native modal behaviour
+---
 ## Files
 
 | Type | Path |
@@ -438,8 +449,3 @@ The **Goosse Input Component** is:
 
 Use `onSubmit(FormData)` as the **single source of truth** for input values.
 
-
-## Demo
-
-Live demo:
-https://<username>.github.io/Bootstrap-5-Simple-Input/
