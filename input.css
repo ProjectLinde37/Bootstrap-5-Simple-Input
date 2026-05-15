@@ -32,3 +32,9 @@
 .goosse-input textarea {
     resize: vertical;
 }
+
+.goosse-range-value {
+    float: right;
+    font-weight: 500;
+    margin-left: 0.4rem;
+}

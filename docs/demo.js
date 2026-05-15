@@ -108,3 +108,65 @@ document.getElementById('btn-edit').addEventListener('click', () => {
         }
     });
 });
+
+/* 5️⃣ Number + range (slider) */
+document.getElementById('btn-advanced').addEventListener('click', () => {
+    goosseInput.open({
+        title: 'Advanced input',
+        description: 'Demo van number en slider inputs.',
+        fields: [
+            {
+                type: 'number',
+                name: 'age',
+                label: 'Age',
+                value: 30,
+                placeholder: 'Enter age',
+                options: {
+                    min: 0,
+                    max: 120,
+                    step: 1
+                }
+            },
+            {
+                type: 'number',
+                name: 'price',
+                label: 'Price (€)',
+                value: 10,
+                options: {
+                    min: 0,
+                    max: 1000,
+                    step: 0.5
+                }
+            },
+            {
+                type: 'range',
+                name: 'volume',
+                label: 'Volume',
+                value: 50,
+                options: {
+                    min: 0,
+                    max: 100,
+                    step: 5
+                }
+            },
+            {
+                type: 'range',
+                name: 'satisfaction',
+                label: 'Satisfaction',
+                value: 3,
+                options: {
+                    min: 1,
+                    max: 5,
+                    step: 1
+                }
+            }
+        ],
+        onSubmit(data) {
+            const values = Object.fromEntries(data);
+            console.log(values);
+            alert(
+                `Age: ${values.age}\nPrice: €${values.price}\nVolume: ${values.volume}\nSatisfaction: ${values.satisfaction}`
+            );
+        }
+    });
+});

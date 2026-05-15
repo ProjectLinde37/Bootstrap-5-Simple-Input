@@ -104,6 +104,18 @@
             fieldsEl.appendChild(renderField(field));
         });
 
+        fieldsEl.querySelectorAll('input[type="range"]').forEach(input =>
+        {
+            const labelValue = fieldsEl.querySelector(`#${input.name}-value`);
+            if (labelValue) {
+                input.addEventListener('input', () =>
+                {
+                    labelValue.textContent = input.value;
+                });
+            }
+        })
+
+
         formEl.addEventListener('submit', function (e)
         {
             e.preventDefault();
@@ -230,6 +242,42 @@ ${Object.entries(options).map(
   <label class="form-check-label">${esc(t)}</label>
 </div>`
                 ).join('')}`;
+                break;
+
+            case 'number':
+                el.innerHTML = `
+    <label class="form-label">${esc(label)}</label>
+    <input
+      type="number"
+      class="form-control"
+      name="${esc(name)}"
+      value="${esc(value)}"
+      placeholder="${esc(placeholder)}"
+      ${options.min !== undefined ? `min="${options.min}"` : ''}
+      ${options.max !== undefined ? `max="${options.max}"` : ''}
+      ${options.step !== undefined ? `step="${options.step}"` : ''}
+    >
+  `;
+                break;
+
+            case 'range':
+                el.innerHTML = `
+    <label class="form-label">
+      <span class="goosse-range-label">${esc(label)}</span>
+      <span class="goosse-range-value" id="${esc(name)}-value">
+        ${esc(value)}
+      </span>
+    </label>
+    <input
+      type="range"
+      class="form-range"
+      name="${esc(name)}"
+      value="${esc(value)}"
+      min="${options.min ?? 0}"
+      max="${options.max ?? 100}"
+      step="${options.step ?? 1}"
+    >
+  `;
                 break;
 
             default:
