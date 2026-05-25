@@ -170,3 +170,33 @@ document.getElementById('btn-advanced').addEventListener('click', () => {
         }
     });
 });
+
+
+/* 6️⃣ Multi-select using select (NEW) */
+document.getElementById('btn-multiselect').addEventListener('click', () => {
+    goosseInput.open({
+        title: 'Select categories',
+        description: 'Demo van multi-select via het bestaande select type.',
+        fields: [
+            {
+                type: 'select',
+                name: 'categorie_ids[]',
+                label: 'Categorieën',
+                multiple: true,
+                value: ['1', '3'], // ✅ preselect werkt
+                options: {
+                    1: 'Open aanbod',
+                    2: 'Aanbod op maat',
+                    3: 'Sensibilisatie',
+                    4: 'Demo categorie'
+                }
+            }
+        ],
+        onSubmit(data) {
+            // FormData -> array uitlezen
+            const values = data.getAll('categorie_ids[]');
+            console.log('Geselecteerde categorieën:', values);
+            alert('Geselecteerd: ' + values.join(', '));
+        }
+    });
+});
