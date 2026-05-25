@@ -9,8 +9,7 @@
    Uses: bootstrap.Modal
    ========================================================================== */
 
-(function (window)
-{
+(function (window) {
     'use strict';
     let activeInstance = null;
     const CONFIG = {
@@ -18,8 +17,7 @@
         duplicateWarning: 'Er is al een invoervenster geopend.'
     };
 
-    function openInput(options)
-    {
+    function openInput(options) {
 
 // ✅ Singleton guard: slechts 1 input tegelijk
         if (activeInstance) {
@@ -99,25 +97,21 @@
         const fieldsEl = modalEl.querySelector('.goosse-input-fields');
         const formEl = modalEl.querySelector('.goosse-input-form');
 
-        fields.forEach(field =>
-        {
+        fields.forEach(field => {
             fieldsEl.appendChild(renderField(field));
         });
 
-        fieldsEl.querySelectorAll('input[type="range"]').forEach(input =>
-        {
+        fieldsEl.querySelectorAll('input[type="range"]').forEach(input => {
             const labelValue = fieldsEl.querySelector(`#${input.name}-value`);
             if (labelValue) {
-                input.addEventListener('input', () =>
-                {
+                input.addEventListener('input', () => {
                     labelValue.textContent = input.value;
                 });
             }
         })
 
 
-        formEl.addEventListener('submit', function (e)
-        {
+        formEl.addEventListener('submit', function (e) {
             e.preventDefault();
             const data = new FormData(formEl);
 
@@ -128,8 +122,7 @@
 
                 // ✅ Promise ondersteuning (AJAX-ready)
                 if (result instanceof Promise) {
-                    result.then(r =>
-                    {
+                    result.then(r => {
                         if (r !== false) modal.hide();
                     });
                     return;
@@ -139,8 +132,7 @@
             modal.hide();
         });
 
-        modalEl.addEventListener('hidden.bs.modal', function ()
-        {
+        modalEl.addEventListener('hidden.bs.modal', function () {
 
             activeInstance = null;   // ✅ singleton vrijgeven
             container.remove();      // ✅ DOM cleanup
@@ -159,8 +151,7 @@
     /**
      * Eenvoudige HTML escaping voor veiligheid (XSS)
      */
-    function esc(str = '')
-    {
+    function esc(str = '') {
         return String(str)
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -173,8 +164,7 @@
        Field renderer
        ========================== */
 
-    function renderField(field)
-    {
+    function renderField(field) {
         const {
             type = 'text',
             name,
@@ -214,15 +204,31 @@
         `;
                 break;
 
-            case 'select':
+            case 'select': {
+                const isMultiple = field.multiple === true;
+
+                // value kan string | number | array zijn
+                const values = Array.isArray(value)
+                    ? value.map(String)
+                    : value !== undefined && value !== null
+                        ? [String(value)]
+                        : [];
+
                 el.innerHTML = `
-<label class="form-label">${esc(label)}</label>
-<select name="${name}" class="form-select">
-  ${Object.entries(options).map(
-                    ([v, t]) => `<option value="${v}" ${String(v) === String(value) ? 'selected' : ''}>${esc(t)}</option>`
-                ).join('')}
-</select>`;
+        <label class="form-label">${esc(label)}</label>
+        <select
+            class="form-select"
+            name="${name}"
+            ${isMultiple ? 'multiple' : ''}>
+            ${Object.entries(options).map(([v, t]) => `
+                <option value="${esc(v)}"
+                    ${values.includes(String(v)) ? 'selected' : ''}>
+                    ${esc(t)}
+                </option>
+            `).join('')}
+        </select>`;
                 break;
+            }
 
             case 'checkbox':
                 el.innerHTML = `
@@ -293,8 +299,7 @@ ${Object.entries(options).map(
 
     window.goosseInput = {
         config: CONFIG,
-        open(options)
-        {
+        open(options) {
             openInput(options);
         }
     };
