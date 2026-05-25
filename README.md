@@ -1,60 +1,77 @@
 # Goosse Input Component
 
-A **fully self‑contained input component**.  
-Built on top of **Bootstrap 5** (JS + CSS).
+A **fully self‑contained input modal component** built on top of **Bootstrap 5**.  
+Designed for **admin interfaces**, **MVC applications** and **production use**.
+
+This component provides a clean, explicit way to collect user input using
+a modal dialog — without frameworks, dependencies or hidden magic.
+
+---
+
+## Philosophy
+
+- ✅ Explicit over implicit
+- ✅ Plain JavaScript
+- ✅ Bootstrap‑native (Modal)
+- ✅ MVC‑friendly
+- ✅ Production‑first
+- ✅ No black boxes
+
+The component is intentionally **small and opinionated**:
+it solves input modals well, and nothing more.
 
 ---
 
 ## Features
 
-- ✅ Fully standalone
-- ✅ Bootstrap 5 native (`Modal`)
+- ✅ Fully standalone (JS + CSS only)
+- ✅ Bootstrap 5 native modal
 - ✅ On‑demand DOM injection
-- ✅ Self‑cleaning (DOM + events)
-- ✅ Only **one input active at a time** (singleton guard)
+- ✅ Automatic cleanup (DOM + events)
+- ✅ Singleton guard (only one modal at a time)
 - ✅ XSS‑safe (HTML escaping)
-- ✅ MVC‑compliant
-- ✅ Production‑first
-- ✅ Numeric input support (`number`, `range`)
-- ✅ Multi‑select support via native `<select multiple>`
+- ✅ Promise‑aware submit handling
+- ✅ Edit mode support (pre‑filled values)
+- ✅ Numeric inputs (`number`, `range`)
+- ✅ **Multi‑select support via native `<select multiple>`**
 
 ---
 
-## Demo
+## Requirements
 
-Live demo of the Goosse Input component:
+- **Bootstrap 5**
+  - `bootstrap.bundle.js` (Modal required)
+  - Bootstrap CSS
 
-👉 https://projectlinde37.github.io/Bootstrap-5-Simple-Input/
-
-The demo showcases:
-- Dynamic input modal using plain JavaScript
-- Supported field types:
-  - text
-  - date
-  - textarea
-  - select (single & multiple)
-  - radio
-  - checkbox
-  - hidden
-  - number
-  - range
-- Default values and edit mode
-- Client-side validation flow (`return false` keeps the modal open)
-- Singleton guard (only one input modal at a time)
-- Bootstrap‑native modal behaviour
-- Interactive sliders with live value display
+No other dependencies.
 
 ---
 
-## Files
+## File structure
 
 | Type | Path |
-| :--- | :--- |
-| **JS** | `public/goosse/input/input.js` |
+|---|---|
+| **JavaScript** | `public/goosse/input/input.js` |
 | **CSS** | `public/goosse/input/input.css` |
 
-**Requires:**
-- Bootstrap 5 (JS + CSS)
+---
+
+## Supported field types
+
+| Type | Description |
+|---|---|
+| `text` | Single‑line text |
+| `date` | Date picker |
+| `textarea` | Multi‑line text |
+| `select` | Dropdown (single or multiple) |
+| `radio` | Radio button group |
+| `checkbox` | Single checkbox |
+| `hidden` | Hidden input |
+| `number` | Numeric input |
+| `range` | Slider with live value |
+
+⚠️ **There is no separate `multiselect` type**.  
+Multi‑select is handled via `type: "select"` with `multiple: true`.
 
 ---
 
@@ -64,25 +81,111 @@ The demo showcases:
 goosseInput.open({
   title: 'Enter name',
   fields: [
-    { type: 'text', name: 'name', label: 'Name' }
+    {
+      type: 'text',
+      name: 'name',
+      label: 'Name',
+      placeholder: 'John Doe'
+    }
   ],
   onSubmit(data) {
     console.log(Object.fromEntries(data));
   }
 });
+````
 
-### Multi‑select usage
+* `fields` is **required**
+* `onSubmit` receives a `FormData` instance
+* Returning `false` keeps the modal open
 
-The `select` field type supports **multiple selection** by enabling the `multiple` flag.
-Preselected values can be provided as an **array**.
+***
 
+## Multiple fields example
+
+```js
+goosseInput.open({
+  title: 'User profile',
+  fields: [
+    { type: 'text', name: 'username', label: 'Username' },
+    { type: 'date', name: 'birthdate', label: 'Birth date' },
+    {
+      type: 'select',
+      name: 'country',
+      label: 'Country',
+      options: {
+        be: 'Belgium',
+        nl: 'Netherlands',
+        fr: 'France'
+      }
+    },
+    {
+      type: 'radio',
+      name: 'gender',
+      label: 'Gender',
+      options: {
+        m: 'Male',
+        f: 'Female'
+      }
+    },
+    {
+      type: 'checkbox',
+      name: 'newsletter',
+      label: 'Subscribe to newsletter'
+    }
+  ],
+  onSubmit(data) {
+    console.log(Object.fromEntries(data));
+  }
+});
+```
+
+***
+
+## Edit mode (pre‑filled values)
+
+```js
+goosseInput.open({
+  title: 'Edit user',
+  fields: [
+    { type: 'hidden', name: 'id', value: '42' },
+    { type: 'text', name: 'name', label: 'Name', value: 'Bart' },
+    {
+      type: 'select',
+      name: 'role',
+      label: 'Role',
+      value: 'admin',
+      options: {
+        user: 'User',
+        admin: 'Administrator'
+      }
+    },
+    {
+      type: 'checkbox',
+      name: 'active',
+      label: 'Active',
+      value: true
+    }
+  ],
+  onSubmit(data) {
+    console.log(Object.fromEntries(data));
+  }
+});
+```
+
+***
+
+## Multi‑select usage (IMPORTANT)
+
+Multi‑select is supported via **native `<select multiple>`**.
+
+```js
 goosseInput.open({
   title: 'Select categories',
   fields: [
     {
       type: 'select',
       name: 'categorie_ids[]',
-      label: 'Categorieën',
+      label: 'Categories',
       multiple: true,
       value: [1, 3],
       options: {
@@ -97,3 +200,115 @@ goosseInput.open({
     console.log(selected);
   }
 });
+```
+
+### Notes
+
+* ✅ Use `multiple: true`
+* ✅ Use an **array** for `value`
+* ✅ Use `FormData.getAll(name)` to retrieve values
+* ❌ Do **not** use `type: "multiselect"` (does not exist)
+
+***
+
+## Numeric inputs
+
+```js
+goosseInput.open({
+  title: 'Advanced input',
+  fields: [
+    {
+      type: 'number',
+      name: 'age',
+      label: 'Age',
+      value: 30,
+      options: { min: 0, max: 120 }
+    },
+    {
+      type: 'range',
+      name: 'volume',
+      label: 'Volume',
+      value: 50,
+      options: { min: 0, max: 100, step: 5 }
+    }
+  ],
+  onSubmit(data) {
+    console.log(Object.fromEntries(data));
+  }
+});
+```
+
+***
+
+## Validation flow
+
+```js
+onSubmit(data) {
+  if (!data.get('confirm')) {
+    alert('Please confirm first');
+    return false; // modal stays open
+  }
+}
+```
+
+* Returning `false` prevents closing
+* Promises are supported
+
+***
+
+## Singleton behaviour
+
+Only **one input modal** can be open at any time.
+
+If `open()` is called while another modal is active:
+
+* a warning toast is shown
+* the existing modal stays open
+
+This avoids UI chaos in admin panels.
+
+***
+
+## Accessibility & security
+
+* ✅ Uses native HTML inputs
+* ✅ Compatible with Bootstrap accessibility features
+* ✅ Escapes all labels and values (XSS‑safe)
+* ✅ Designed to work with server‑side validation
+* ✅ CSRF protection is expected at controller level
+
+***
+
+## When to use this component
+
+✅ Admin panels  
+✅ Internal tools  
+✅ CRUD interfaces  
+✅ MVC‑based applications
+
+❌ Public forms requiring heavy UX  
+❌ Complex conditional form builders  
+❌ Front‑end frameworks (React/Vue)
+
+***
+
+## Demo
+
+Live demo:  
+👉 <https://projectlinde37.github.io/Bootstrap-5-Simple-Input/>
+
+The demo showcases:
+
+* All supported field types
+* Edit mode
+* Validation flow
+* Multi‑select usage
+* Numeric inputs
+
+***
+
+## License
+
+MIT — use freely, modify responsibly.
+
+```
