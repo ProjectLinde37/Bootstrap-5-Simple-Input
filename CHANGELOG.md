@@ -2,6 +2,13 @@
 
 All notable changes to Goosse Input are documented here.
 
+## [1.1] – 2026-11-03
+
+### Fixed
+
+- **Crash on `range` fields with `[]` in the name** — live-value lookup now uses `getElementById()` instead of `querySelector('#name[]-value')`, which threw a `SyntaxError`
+- **Unhandled `onSubmit` promise rejections** — a `.catch()` was added; the modal stays open and the error is logged
+
 ## [1.0] – 2026-11-03
 
 ### Added

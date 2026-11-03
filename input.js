@@ -102,7 +102,8 @@
         });
 
         fieldsEl.querySelectorAll('input[type="range"]').forEach(input => {
-            const labelValue = fieldsEl.querySelector(`#${input.name}-value`);
+            // getElementById i.p.v. querySelector: name kan '[]' bevatten
+            const labelValue = document.getElementById(`${input.name}-value`);
             if (labelValue) {
                 input.addEventListener('input', () => {
                     labelValue.textContent = input.value;
@@ -122,9 +123,13 @@
 
                 // ✅ Promise ondersteuning (AJAX-ready)
                 if (result instanceof Promise) {
-                    result.then(r => {
-                        if (r !== false) modal.hide();
-                    });
+                    result
+                        .then(r => {
+                            if (r !== false) modal.hide();
+                        })
+                        .catch(err => {
+                            console.error('GoosseInput: onSubmit afgekeurd', err);
+                        });
                     return;
                 }
             }
@@ -297,7 +302,7 @@ ${Object.entries(options).map(
        Public API
        ========================== */
 
-    const VERSION = '1.0';
+    const VERSION = '1.1';
 
     window.goosseInput = {
         version: VERSION,
