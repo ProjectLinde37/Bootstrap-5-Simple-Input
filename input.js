@@ -297,7 +297,10 @@ ${Object.entries(options).map(
        Public API
        ========================== */
 
+    const VERSION = '1.0';
+
     window.goosseInput = {
+        version: VERSION,
         config: CONFIG,
         open(options) {
             openInput(options);

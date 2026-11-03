@@ -1,5 +1,7 @@
 # Goosse Input Component
 
+**Version 1.0** — see [CHANGELOG.md](CHANGELOG.md)
+
 A **fully self‑contained input modal component** built on top of **Bootstrap 5**.  
 Designed for **admin interfaces**, **MVC applications** and **production use**.
 
